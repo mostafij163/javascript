@@ -116,4 +116,65 @@
 			.reduce((total, age) => total + age);
 
 		console.log(combined);
+
+
+
+		/**************** Async Await callback promises ************/
+		const book = [
+            {title: 'book one', body: 'this is book one'},
+            {title: 'book two', body: 'this is book two'}
+        ];
+        function getPosts(){
+            setTimeout(() => {
+                let output = '';
+                book.forEach((post, index) => {
+                    output += `<li>${post.title}</li>`;
+                });
+                document.body.innerHTML = output;
+            }, 1000);
+		}
+
+		// function createGetPosts(post, callback){
+		// 	setTimeout(() => {
+		// 		book.push(post);
+		// 		callback();
+		// 	}, 2000);
+		// }
+
+		function createGetPosts(post){
+			return new Promise((resolve, reject) =>{
+				const error = false;
+				setTimeout(() => {
+					book.push(post);
+					if(!error){
+						resolve();
+					} else{
+						reject("something went wrong");
+					}
+				}, 2000);
+			});
+		}
+		
+		// createGetPosts({title: 'book three', body: 'this is book three'})
+		// .then(getPosts)
+		// .catch(err => console.log(err));
+
+		async function init(){
+			await createGetPosts({title: 'book three', body: 'this is book three'});
+			getPosts();
+			const res = await fetch("https://jsonplaceholder.typicode.com/users");
+			const data = await res.json();
+			console.log(data);
+		}
+		init();
+
+		// const promise1 = Promise.resolve("hello world");
+		// const promise2 = 10;
+		// const promise3 = new Promise((resolve, reject) => {
+		// 	setTimeout(resolve, 2000, "goodbye");
+		// });
+		// const promise4 = fetch("https://jsonplaceholder.typicode.com/users")
+		// .then(res => res.json());
+
+		// Promise.all([promise1, promise2, promise3, promise4, createGetPosts({title: 'book three', body: 'this is book three'}, getPosts)]).then(value => console.log(value ));
 		
